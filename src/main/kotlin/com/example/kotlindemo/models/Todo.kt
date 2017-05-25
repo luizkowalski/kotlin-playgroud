@@ -20,7 +20,7 @@ data class Todo(
         var task: String = "",
 
         @Column(nullable = false)
-        var status: Int = 0,
+        var status: Status = Status.NOT_DONE,
 
         @Column(nullable = false)
         var uid: String = ""
@@ -31,7 +31,7 @@ data class Todo(
             uid = UUID.randomUUID().toString()
     }
 
-    fun done(){
-        status = 1;
+    fun done() {
+        status = Status.DONE
     }
 }

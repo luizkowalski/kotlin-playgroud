@@ -1,0 +1,1 @@
+insert into todos (task, status, uid) values ('first', 0, 'uuid')

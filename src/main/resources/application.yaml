@@ -8,6 +8,8 @@ spring:
     platform: h2
     url: jdbc:h2:mem:test;MODE=PostgreSQL
   h2.console.enabled: true
+  cache.cache-names: todos
+  cache.caffeine.spec: maximumSize=500,expireAfterAccess=600s
 
 server:
   compression.enabled: true

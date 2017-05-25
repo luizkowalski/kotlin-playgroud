@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.websocket.server.PathParam
 
 @RestController
 class TodosController(val todosRepository: TodosRepository) : BaseController() {
@@ -30,13 +30,13 @@ class TodosController(val todosRepository: TodosRepository) : BaseController() {
     }
 
     @GetMapping("/by_uid")
-    fun findByUid(@PathParam("uid") uid: String) : Todo? {
+    fun findByUid(@RequestParam("uid") uid: String) : Todo? {
         return todosRepository.findByUid(uid)
     }
 
     @PostMapping("/")
-    fun create(@PathParam("name") name: String,
-               @PathParam("status") status: Int?): Todo {
+    fun create(@RequestParam("name") name: String,
+               @RequestParam("status") status: Int?): Todo {
         val t = Todo()
         t.status = Status.fromCode(status ?: 0)
         t.task = name
@@ -45,9 +45,9 @@ class TodosController(val todosRepository: TodosRepository) : BaseController() {
     }
 
     @PostMapping("mark_as_done")
-    fun markAsDone(@PathParam("uid") uid: String): ResponseEntity<Map<String, String>> {
-        val todo = todosRepository.findByUid(uid) ?: return ResponseEntity(notFound(), HttpStatus.NOT_FOUND)
-        todo.done()
+    fun markAsDone(@RequestParam("uid") uid: String): ResponseEntity<Map<String, String>> {
+        var todo = todosRepository.findByUid(uid) ?: return ResponseEntity(notFound(), HttpStatus.NOT_FOUND)
+        todo.finish()
         todosRepository.save(todo)
         return ResponseEntity.ok(success())
     }

@@ -31,7 +31,7 @@ data class Todo(
             uid = UUID.randomUUID().toString()
     }
 
-    fun done() {
+    fun finish() {
         status = Status.DONE
     }
 }

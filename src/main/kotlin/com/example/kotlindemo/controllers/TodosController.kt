@@ -1,8 +1,10 @@
 package com.example.kotlindemo.controllers
 
+import com.example.kotlindemo.exceptions.TodoNotFound
 import com.example.kotlindemo.models.Status
 import com.example.kotlindemo.models.Todo
 import com.example.kotlindemo.repositories.TodosRepository
+import com.zaxxer.hikari.hibernate.HikariConnectionProvider
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,7 +31,7 @@ class TodosController(val todosRepository: TodosRepository) : BaseController() {
 
     @GetMapping("{uid}")
     fun findByUid(@PathVariable("uid") uid: String): Todo? {
-        val todo = todosRepository.findByUid(uid) ?: throw RuntimeException("TODO not found")
+        val todo = todosRepository.findByUid(uid) ?: throw TodoNotFound("TODO with id ${uid} not found")
         return todo
     }
 

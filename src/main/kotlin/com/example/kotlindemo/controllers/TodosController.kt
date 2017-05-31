@@ -5,15 +5,13 @@ import com.example.kotlindemo.models.Todo
 import com.example.kotlindemo.repositories.TodosRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
+@RequestMapping("/todos")
 class TodosController(val todosRepository: TodosRepository) : BaseController() {
 
-    @GetMapping("/")
+    @GetMapping
     fun findAll() = todosRepository.findAll()
 
     /**
@@ -29,14 +27,15 @@ class TodosController(val todosRepository: TodosRepository) : BaseController() {
         return todosRepository.findAll().filter { it.status == Status.DONE }
     }
 
-    @GetMapping("/by_uid")
-    fun findByUid(@RequestParam("uid") uid: String) : Todo? {
-        return todosRepository.findByUid(uid)
+    @GetMapping("{uid}")
+    fun findByUid(@PathVariable("uid") uid: String): Todo? {
+        val todo = todosRepository.findByUid(uid) ?: throw RuntimeException("TODO not found")
+        return todo
     }
 
-    @PostMapping("/")
+    @PostMapping()
     fun create(@RequestParam("name") name: String,
-               @RequestParam("status") status: Int?): Todo {
+               @RequestParam("status", required = false) status: Int?): Todo {
         val t = Todo()
         t.status = Status.fromCode(status ?: 0)
         t.task = name
@@ -44,8 +43,8 @@ class TodosController(val todosRepository: TodosRepository) : BaseController() {
         return todosRepository.save(t)
     }
 
-    @PostMapping("mark_as_done")
-    fun markAsDone(@RequestParam("uid") uid: String): ResponseEntity<Map<String, String>> {
+    @PostMapping("/{uid}/done")
+    fun markAsDone(@PathVariable("uid") uid: String): ResponseEntity<Map<String, String>> {
         var todo = todosRepository.findByUid(uid) ?: return ResponseEntity(notFound(), HttpStatus.NOT_FOUND)
         todo.finish()
         todosRepository.save(todo)

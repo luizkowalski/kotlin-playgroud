@@ -28,7 +28,7 @@ data class Todo(
     @PrePersist
     fun prePersist() {
         if (uid.isNullOrBlank())
-            uid = UUID.randomUUID().toString()
+            uid = UUID.randomUUID().toString().replace("-", "")
     }
 
     fun finish() {

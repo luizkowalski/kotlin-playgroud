@@ -1,1 +1,1 @@
-insert into todos (task, status, uid) values ('first', 0, 'uuid')
+insert into todos (id, task, status, uid) values (nextval('todo_seq'), 'Do something that I should have done', 0, 'uuid')

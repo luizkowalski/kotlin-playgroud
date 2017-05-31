@@ -1,17 +1,18 @@
 package com.example.kotlindemo.models
 
+import com.example.kotlindemo.utils.UIDGenerator
 import com.fasterxml.jackson.annotation.JsonIgnore
-import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "todos", indexes = arrayOf(
-        Index(name = "uid_index_on_todos", columnList = "uid")
+        Index(name = "uid_index_on_todos", columnList = "uid", unique = true)
 ))
+@SequenceGenerator(sequenceName = "todo_seq", name = "todo_seq", allocationSize = 10)
 data class Todo(
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "todo_seq")
         @JsonIgnore
         var id: Long? = null,
 
@@ -28,7 +29,7 @@ data class Todo(
     @PrePersist
     fun prePersist() {
         if (uid.isNullOrBlank())
-            uid = UUID.randomUUID().toString()
+            uid = UIDGenerator.newUid();
     }
 
     fun finish() {

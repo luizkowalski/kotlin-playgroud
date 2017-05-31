@@ -36,7 +36,7 @@ class TodosController(val todosRepository: TodosRepository) : BaseController() {
 
     @PostMapping("/")
     fun create(@RequestParam("name") name: String,
-               @RequestParam("status") status: Int?): Todo {
+               @RequestParam(name = "status", required = false) status: Int?): Todo {
         val t = Todo()
         t.status = Status.fromCode(status ?: 0)
         t.task = name

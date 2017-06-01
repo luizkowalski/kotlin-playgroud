@@ -4,7 +4,6 @@ import com.example.kotlindemo.exceptions.TodoNotFound
 import com.example.kotlindemo.models.Status
 import com.example.kotlindemo.models.Todo
 import com.example.kotlindemo.repositories.TodosRepository
-import com.zaxxer.hikari.hibernate.HikariConnectionProvider
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -45,7 +44,7 @@ class TodosController(val todosRepository: TodosRepository) : BaseController() {
         return todosRepository.save(t)
     }
 
-    @PostMapping("/{uid}/done")
+    @PutMapping("/{uid}/done")
     fun markAsDone(@PathVariable("uid") uid: String): ResponseEntity<Map<String, String>> {
         var todo = todosRepository.findByUid(uid) ?: return ResponseEntity(notFound(), HttpStatus.NOT_FOUND)
         todo.finish()

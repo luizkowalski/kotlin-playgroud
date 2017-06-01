@@ -6,7 +6,7 @@ enum class Status(val code: Int) {
 
     companion object {
         fun fromCode(code: Int): Status {
-            return Status.values().filter { it.code == code } [0]
+            return Status.values().filter { it.code == code }[0]
         }
     }
 }

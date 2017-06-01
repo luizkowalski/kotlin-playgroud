@@ -24,12 +24,11 @@ data class Todo(
         var status: Status = Status.NOT_DONE,
 
         @Column(nullable = false)
-        var uid: String = ""
+        var uid: String? = null
 ) {
     @PrePersist
     fun prePersist() {
-        if (uid.isNullOrBlank())
-            uid = UIDGenerator.newUid();
+        uid = uid ?: UIDGenerator.newUid()
     }
 
     fun finish() {
